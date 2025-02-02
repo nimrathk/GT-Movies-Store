@@ -1,5 +1,4 @@
 from django.shortcuts import render, redirect, get_object_or_404
-
 @login_required
 def edit_review(request, id, review_id, Review=None):
     review = get_object_or_404(Review, id=review_id)
