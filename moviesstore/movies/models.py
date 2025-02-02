@@ -7,5 +7,4 @@ class Movie(models.Model):
     image = models.ImageField(upload_to='movie_images/')
     def __str__(self):
         return str(self.id) + ' - ' + self.name
-
 # Create your models here.
