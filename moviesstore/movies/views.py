@@ -16,12 +16,10 @@ def show(request, id):
     return render(request, 'movies/show.html',
                   {'template_data': template_data})
 
-# ✅ Add this function to fix the error
 def create_review(request, id):
     movie = get_object_or_404(Movie, id=id)
     return render(request, 'movies/create_review.html', {'movie': movie})
 
-# ✅ Add this function to avoid another potential error
 def edit_review(request, id, review_id):
     movie = get_object_or_404(Movie, id=id)
     return render(request, 'movies/edit_review.html', {'movie': movie})
