@@ -7,12 +7,9 @@ def index(request):
         movies = Movie.objects.filter(name__icontains=search_term)
     else:
         movies = Movie.objects.all()
-    print("moviesie",list(Movie.objects.all()))
     template_data = {}
     template_data['title'] = 'Movies'
     template_data['movies'] = movies
-    print("template data,",template_data)
-    print("movies",list(movies))
     return render(request, 'movies/index.html',
                   {'template_data': template_data})
 
