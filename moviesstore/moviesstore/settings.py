@@ -51,13 +51,13 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = 'moviesstore.a.moviesstore.urls'
+#ROOT_URLCONF = 'moviesstore.a.moviesstore.urls'
+ROOT_URLCONF = 'moviesstore.urls'
 
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR,
-                              '/moviesstore/moviesstore/templates')],
+        'DIRS': [BASE_DIR / 'moviesstore/templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -126,7 +126,8 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 STATICFILES_DIRS = [
-    BASE_DIR / 'moviesstore/a/a/moviesstore/static/',
+    #BASE_DIR / 'moviesstore/a/a/moviesstore/static/',
+    BASE_DIR / 'moviesstore/static/',
 ]
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
