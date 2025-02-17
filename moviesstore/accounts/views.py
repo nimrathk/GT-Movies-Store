@@ -7,6 +7,7 @@ from .forms import CustomUserCreationForm, CustomErrorList
 from django.shortcuts import redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
+from .models import Profile
 
 @login_required
 def logout(request):
