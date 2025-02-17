@@ -23,11 +23,11 @@ def login(request):
         user = authenticate(
             request,
             username = request.POST['username'],
-            email = request.POST['email'],
+            securityQ = request.POST['securityQ'],
             password = request.POST['password']
         )
         if user is None:
-            template_data['error'] = 'The username, email, or password is incorrect.'
+            template_data['error'] = 'The username, security question, or password is incorrect.'
             return render(request, 'accounts/login.html',
                 {'template_data': template_data})
         else:
