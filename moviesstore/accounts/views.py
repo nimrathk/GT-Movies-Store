@@ -23,10 +23,11 @@ def login(request):
         user = authenticate(
             request,
             username = request.POST['username'],
+            email = request.POST['email'],
             password = request.POST['password']
         )
         if user is None:
-            template_data['error'] = 'The username or password is incorrect.'
+            template_data['error'] = 'The username, email, or password is incorrect.'
             return render(request, 'accounts/login.html',
                 {'template_data': template_data})
         else:
@@ -44,10 +45,10 @@ def signup(request):
         form = CustomUserCreationForm(request.POST, error_class=CustomErrorList)
         if form.is_valid():
             form.save()
-            return redirect('home.index')
+            return redirect('accounts.login')
         else:
             template_data['form'] = form
-            return redirect('accounts.login')
+            return render(request, 'accounts/signup.html', {'template_data': template_data})
 
 @login_required
 def orders(request):
