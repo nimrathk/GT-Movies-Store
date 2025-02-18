@@ -10,17 +10,25 @@ class CustomErrorList(ErrorList):
         return mark_safe(''.join([f'<div class="alert alert-danger" role="alert">{e}</div>' for e in self]))
 
 class CustomUserCreationForm(UserCreationForm):
-    security_answer = forms.CharField(
-        max_length=100,
-        required=True,
-        label="Security Question: What city were you born in?",
-        widget=forms.TextInput(attrs={'class': 'form-control'})
+    security_answer1 = forms.CharField(
+        label="What city were you born in?",
+        max_length=255,
+        widget=forms.PasswordInput(attrs={'class': 'form-control'})
     )
+
+    security_answer2 = forms.CharField(
+        label="What is your mother's maiden name?",
+        max_length=255,
+        widget=forms.PasswordInput(attrs={'class': 'form-control'})
+    )
+
+    class Meta:
+        model = User
+        fields = ['username', 'email', 'password1', 'password2']
 
     def __init__(self, *args, **kwargs):
         super(CustomUserCreationForm, self).__init__(*args, **kwargs)
-        for fieldname in ['username', 'password1',
-        'password2', 'security_answer']:
+        for fieldname in ['username', 'password1', 'password2']:
             self.fields[fieldname].help_text = None
             self.fields[fieldname].widget.attrs.update(
                 {'class': 'form-control'}
@@ -28,12 +36,13 @@ class CustomUserCreationForm(UserCreationForm):
         self.order_fields(['username', 'password1', 'password2', 'security_answer'])
 
     def save(self, commit=True):
-        user = super(CustomUserCreationForm, self).save(commit=False)
+        user = super().save(commit=False)
         if commit:
             user.save()
-            Profile.objects.create(
+            SecurityQuestions.objects.create(
                 user=user,
-                security_question="What city were you born in?",
-                security_answer=self.cleaned_data['security_answer']
+                security_answer1=self.cleaned_data['security_answer1'],
+                security_answer2=self.cleaned_data['security_answer2'],
+
             )
         return user

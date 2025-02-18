@@ -1,12 +1,14 @@
 # models.py
 from django.db import models
 from django.contrib.auth.models import User
+from django.contrib.auth.hashers import make_password
 
-
-class Profile(models.Model):
+class SecurityQuestions(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    security_question = models.CharField(max_length=50)
-    security_answer = models.CharField(max_length=100)
+    security_answer1 = models.CharField(max_length=255)
+    security_answer2 = models.CharField(max_length=255)
 
-    def __str__(self):
-        return self.user.username
+    def save(self, *args, **kwargs):
+        self.security_answer1 = make_password(self.security_answer1)
+        self.security_answer2 = make_password(self.security_answer2)
+        super().save(*args, **kwargs)
