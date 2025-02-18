@@ -104,13 +104,13 @@ def password_reset(request, username, token):
                     return render(request, 'accounts/login.html',
                                       {'template_data': template_data})
                 else:
-#                    form = SetPasswordForm(user)
                     return render(request, 'accounts/password_reset.html',
                                   {'template_data': template_data, 'form': form})
-                    #return render(request, 'accounts/password_reset.html', {'template_data': template_data, 'form': form})
+                # return render(request, 'accounts/password_reset.html', {'template_data': template_data, 'form': form})
             else:
                 template_data['error'] = 'Invalid reset token.'
                 return render(request, 'accounts/password_reset.html', {'template_data': template_data})
     except User.DoesNotExist:
         template_data['error'] = 'Invalid user.'
         return render(request, 'accounts/password_reset.html', {'template_data': template_data})
+    return render(request, 'accounts/password_reset.html', {'template_data': template_data})
