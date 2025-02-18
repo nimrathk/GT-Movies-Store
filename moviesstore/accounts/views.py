@@ -8,7 +8,6 @@ from .forms import CustomUserCreationForm, CustomErrorList
 from django.shortcuts import redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
-from .models import Profile
 
 @login_required
 def logout(request):
@@ -25,11 +24,10 @@ def login(request):
         user = authenticate(
             request,
             username = request.POST['username'],
-            securityQ = request.POST['securityQ'],
             password = request.POST['password']
         )
         if user is None:
-            template_data['error'] = 'The username, security question, or password is incorrect.'
+            template_data['error'] = 'The username or password is incorrect.'
             return render(request, 'accounts/login.html',
                 {'template_data': template_data})
         else:
