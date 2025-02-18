@@ -3,6 +3,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django.forms.utils import ErrorList
 from django.utils.safestring import mark_safe
 from django.contrib.auth.models import User
+from .models import SecurityQuestions
 
 class CustomErrorList(ErrorList):
     def __str__(self):
@@ -44,6 +45,5 @@ class CustomUserCreationForm(UserCreationForm):
                 user=user,
                 security_answer1=self.cleaned_data['security_answer1'],
                 security_answer2=self.cleaned_data['security_answer2'],
-
             )
         return user

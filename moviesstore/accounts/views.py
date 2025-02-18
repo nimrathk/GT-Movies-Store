@@ -8,6 +8,7 @@ from .forms import CustomUserCreationForm, CustomErrorList
 from django.shortcuts import redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
+from .models import SecurityQuestions
 
 @login_required
 def logout(request):
@@ -59,29 +60,33 @@ def orders(request):
         {'template_data': template_data})
 
 def request_reset(request):
-    template_data = {'title': 'Reset Password'}
+    template_data = {}
+    template_data['title'] = 'Request Reset'
     if request.method == 'GET':
         return render(request, 'accounts/request_reset.html',
-                      {'template_data': template_data})
+               {'template_data': template_data})
     elif request.method == 'POST':
-        username = request.POST.get('username')
-        answer1 = request.POST['security1']
-        answer2 = request.POST['security2']
-    try:
-        user = User.objects.get(username=username)
-        correct_answers = SecurityQuestions.objects.get(user=user)
-        if check_password(answer1, correct_answers.answer1) and check_password(answer2, correct_answers.answer2):
-            token = default_token_generator.make_token(user)
-            return redirect('accounts:password_reset', username=username, token=token)
+        user = authenticate(
+            request,
+            username=request.POST['username'],
+            security_answer1=request.POST['security_answer1'],
+            security_answer2=request.POST['security_answer2']
+        )
+        if user is None:
+            template_data['error'] = 'The username or answers to security questions are incorrect.'
+            return render(request, 'accounts/request_reset.html',
+                {'template_data': template_data})
         else:
-            template_data['error'] = 'At least one of the answers is incorrect.'
-            return render(request, 'accounts/request_reset.html',{'template_data': template_data})
-    except User.DoesNotExist:
-        template_data['error'] = 'This user does not exist.'
-        return render(request, 'accounts/request_reset.html', {'template_data': template_data})
+            auth_login(request, user)
+            return redirect('accounts.password_reset')
+
 
 def password_reset(request, username, token):
-    template_data = {'title': 'Set New Password'}
+    template_data = {}
+    template_data['title'] = 'Password Reset'
+    if request.method == 'GET':
+        return render(request, 'accounts/password_reset.html',
+                      {'template_data': template_data})
     try:
         user = get_user_model().objects.get(username=username)
         if default_token_generator.check_token(user, token):
@@ -89,7 +94,7 @@ def password_reset(request, username, token):
                 form = SetPasswordForm(user, request.POST)
                 if form.is_valid():
                     form.save()
-                    return redirect('accounts:login')
+                    return redirect('accounts/login.html')
             else:
                 form = SetPasswordForm(user)
             return render(request, 'accounts/password_reset.html', {'template_data': template_data, 'form': form})
